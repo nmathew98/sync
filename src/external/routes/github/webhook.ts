@@ -29,7 +29,7 @@ export default class GithubWebHook extends BaseRoute {
 
 		if (!config)
 			config = await loadConfig(
-				resolve(__dirname, "../../../"),
+				resolve(__dirname, "../../../../"),
 				"sync",
 				Object.create(null),
 			);

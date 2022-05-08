@@ -3,6 +3,11 @@ export default {
 		dsn: "",
 		tracesSampleRate: 1.0,
 	},
+	routes: {
+		storage: {
+			enabled: false,
+		},
+	},
 	cors: {
 		origin: (
 			origin: string,

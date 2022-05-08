@@ -10,7 +10,7 @@ const Authorization: Partial<Authorization> = {
 		const body = await H3.useRawBody(request);
 		const signature = request.headers["X-Hub-Signature"];
 
-		if (!body) throw new Error("Invalid request");
+		if (!body) throw new RouteError("Invalid request", 500);
 
 		if (!signature || Array.isArray(signature))
 			throw new RouteError("Signature is invalid", 401);

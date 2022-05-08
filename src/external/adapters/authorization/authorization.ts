@@ -5,10 +5,7 @@ const AuthorizationSecrets = {
 	githubSecret: process.env.GITHUB_SECRET,
 };
 
-const Authorization: Authorization = {
-	get: async () => {
-		throw new Error("Unsupported");
-	},
+const Authorization: Partial<Authorization> = {
 	verify: async (request, options = AuthorizationSecrets) => {
 		const body = await H3.useRawBody(request);
 		const signature = request.headers["X-Hub-Signature"];
@@ -31,3 +28,5 @@ const Authorization: Authorization = {
 		} else throw new RouteError("No options provided", 500);
 	},
 };
+
+export default Authorization;

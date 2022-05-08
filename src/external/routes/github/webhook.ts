@@ -7,6 +7,8 @@ import {
 	H3,
 	sendError,
 	sendSuccess,
+	Logger,
+	ServeContext,
 } from "@skulpture/serve";
 import { IncomingMessage, ServerResponse } from "h3";
 import { resolve } from "path";
@@ -18,7 +20,13 @@ let config: Record<string, any>;
 @Protected()
 @Route("/github/webhook")
 export default class GithubWebHook extends BaseRoute {
-	async use(request: IncomingMessage, response: ServerResponse) {
+	async use(
+		request: IncomingMessage,
+		response: ServerResponse,
+		context: ServeContext,
+	) {
+		const Logger: Logger = context.get("Logger");
+
 		if (!config)
 			config = await loadConfig(
 				resolve(__dirname, "../../../"),
@@ -41,23 +49,29 @@ export default class GithubWebHook extends BaseRoute {
 			"commands",
 			"repos",
 		];
-		for (const server of Object.keys(config)) {
-			if (
-				Object.keys(config[server]).every(key => requiredKeys.includes(key))
-			) {
-				const ssh = new NodeSSH();
+		try {
+			for (const server of Object.keys(config)) {
+				if (
+					Object.keys(config[server]).every(key => requiredKeys.includes(key))
+				) {
+					const ssh = new NodeSSH();
 
-				if (config[server].repos.includes(repo)) {
-					ssh.connect({
-						host: config[server].host,
-						username: config[server].username,
-						password: config[server].password,
-						port: config[server].port,
-					});
+					if (config[server].repos.includes(repo)) {
+						ssh.connect({
+							host: config[server].host,
+							username: config[server].username,
+							password: config[server].password,
+							port: config[server].port,
+						});
 
-					await ssh.exec(config[server].commands(repo).join(" && "), []);
+						await ssh.exec(config[server].commands(repo).join(" && "), []);
+					}
 				}
 			}
+		} catch (error: any) {
+			Logger.error(error);
+
+			return sendError(response, error.message, 500);
 		}
 
 		return sendSuccess(response, "Successfully synced");

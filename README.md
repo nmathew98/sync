@@ -10,13 +10,15 @@ A simple application to sync and redeploy servers when new commits are pushed to
 
 ## Other notes
 
-- The commands are not filled in on purpose to allow for flexibility but ordinarilly you would:
+- The commands are not filled in on purpose to allow for flexibility but ordinarily you would:
 
 ```
 git -C ${repo} reset --hard
 git -C ${repo} clean -df
-git -C ${repo} pull -f
-npm -C ${repo} install --production
+git -C ${repo} pull -f origin master
+npm -C ${repo} install --development
 npm -C ${repo} run build
-npc -C ${repo} run start
+npm -C ${repo} run start
 ```
+
+- `repo` above is the directory of the project

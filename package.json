@@ -1,7 +1,7 @@
 {
-	"name": "actualise-backend",
+	"name": "sync",
 	"version": "1.0.0",
-	"description": "Actualise backend",
+	"description": "A simple application to sync and redeploy servers",
 	"main": "dist/index.js",
 	"private": true,
 	"scripts": {

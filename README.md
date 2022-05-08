@@ -1,3 +1,3 @@
 ## About
 
-A template repository to sync, rebuild and redeploy applications on production servers
+A simple application to sync and redeploy servers

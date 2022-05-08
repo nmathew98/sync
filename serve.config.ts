@@ -4,6 +4,9 @@ export default {
 		tracesSampleRate: 1.0,
 	},
 	routes: {
+		api: {
+			enabled: false,
+		},
 		storage: {
 			enabled: false,
 		},

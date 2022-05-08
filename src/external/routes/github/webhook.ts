@@ -10,7 +10,6 @@ import {
 	Logger,
 	ServeContext,
 } from "@skulpture/serve";
-import { IncomingMessage, ServerResponse } from "h3";
 import { resolve } from "path";
 import { NodeSSH } from "node-ssh";
 
@@ -21,8 +20,8 @@ let config: Record<string, any>;
 @Route("/github/webhook")
 export default class GithubWebHook extends BaseRoute {
 	async use(
-		request: IncomingMessage,
-		response: ServerResponse,
+		request: H3.IncomingMessage,
+		response: H3.ServerResponse,
 		context: ServeContext,
 	) {
 		const Logger: Logger = context.get("Logger");

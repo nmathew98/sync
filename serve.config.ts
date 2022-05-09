@@ -5,7 +5,7 @@ export default {
 	},
 	routes: {
 		api: {
-			enabled: true,
+			enabled: false,
 		},
 		storage: {
 			enabled: false,

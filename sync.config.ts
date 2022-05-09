@@ -5,7 +5,7 @@ export default {
 			username: "",
 			password: "",
 			port: "",
-			commands: (repo: string) => [],
+			commands: (repo: string, branch: string) => [],
 			repos: [],
 		},
 		frontend: {
@@ -13,7 +13,7 @@ export default {
 			username: "",
 			password: "",
 			port: "",
-			commands: (repo: string) => [],
+			commands: (repo: string, branch: string) => [],
 			repos: [],
 		},
 	},

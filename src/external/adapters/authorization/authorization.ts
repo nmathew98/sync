@@ -24,7 +24,7 @@ const Authorization: Partial<Authorization> = {
 			);
 
 			if (buffer.length !== digest.length || !timingSafeEqual(digest, buffer))
-				throw new Error("Invalid request");
+				throw new RouteError("Invalid request", 500);
 		} else throw new RouteError("No options provided", 500);
 	},
 };

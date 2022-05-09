@@ -35,10 +35,18 @@ export default class GithubWebHook extends BaseRoute {
 
 		const body = await H3.useBody(request);
 
-		if (!body || typeof body !== "object" || !body.repository)
+		if (
+			!body ||
+			typeof body !== "object" ||
+			!body.rule ||
+			!body.rule.name ||
+			!body.repository ||
+			!body.repository.name
+		)
 			return sendError(response, "Invalid request");
 
 		const repo = body.repository.name;
+		const branch = body.rule.name;
 
 		const requiredKeys = [
 			"host",
@@ -48,29 +56,30 @@ export default class GithubWebHook extends BaseRoute {
 			"commands",
 			"repos",
 		];
-		try {
-			for (const server of Object.keys(config)) {
-				if (
-					Object.keys(config[server]).every(key => requiredKeys.includes(key))
-				) {
-					const ssh = new NodeSSH();
+		for (const server of Object.keys(config)) {
+			if (
+				Object.keys(config[server]).every(key => requiredKeys.includes(key))
+			) {
+				const ssh = new NodeSSH();
 
-					if (config[server].repos.includes(repo)) {
-						ssh.connect({
+				if (config[server].repos.includes(repo)) {
+					try {
+						await ssh.connect({
 							host: config[server].host,
 							username: config[server].username,
 							password: config[server].password,
 							port: config[server].port,
 						});
 
-						await ssh.exec(config[server].commands(repo).join(" && "), []);
+						await ssh.exec(
+							config[server].commands(repo, branch).join(" && "),
+							[],
+						);
+					} catch (error: any) {
+						Logger.error(error);
 					}
 				}
 			}
-		} catch (error: any) {
-			Logger.error(error);
-
-			return sendError(response, error.message, 500);
 		}
 
 		return sendSuccess(response, "Successfully synced");
